@@ -28,8 +28,9 @@
 <meta property="og:image" content="https://cagindex.github.io/2024/07/31/VAE/ae_new.png">
 <meta property="og:image" content="https://cagindex.github.io/2024/07/31/VAE/Figure_2.png">
 <meta property="article:published_time" content="2024-07-31T13:50:30.000Z">
-<meta property="article:modified_time" content="2024-07-31T07:46:32.000Z">
+<meta property="article:modified_time" content="2024-07-31T08:03:56.000Z">
 <meta property="article:author" content="cagindex">
+<meta property="article:tag" content="Generative-Models">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cagindex.github.io/2024/07/31/VAE/ae_new.png">
   <!-- Canonical links -->
@@ -38,7 +39,7 @@
     <link rel="alternate" href="/atom.xml" title="cagindex blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png" type="image/x-icon">
+    <link rel="icon" href="/edit.png" type="image/x-icon">
   
   
 <link rel="stylesheet" href="/css/style.css">
@@ -58,11 +59,11 @@
       
       <div class="profile-block text-center">
         <a id="avatar" href="https://github.com/cofess" target="_blank">
-          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+          <img class="img-circle img-rotate" src="/images/tianyi.jpg" width="200" height="200">
         </a>
-        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
-        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
-        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+        <h2 id="name" class="hidden-xs hidden-sm">cagindex</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">ZZZ</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijin, China</small>
       </div>
       
       <div class="search" id="search-form-wrap">
@@ -221,9 +222,23 @@
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Generative-Models/" rel="tag">Generative-Models</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
 
     
       
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Generative-Models/" style="font-size: 13px;">Generative-Models</a>
+    </div>
+  </div>
+
     
       
   <div class="widget">
@@ -335,6 +350,11 @@
 </span>
         
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Generative-Models/" rel="tag">Generative-Models</a>
+  </span>
+
 
         
 
@@ -378,9 +398,10 @@ MathJax = {
 Diffusion Models: A Unified Perspective</a></p>
 <p>主要内容：</p>
 <ul>
-<li>生成模型总览</li>
-<li>VAE</li>
-<li>VAE vs AE (What the difference)</li>
+<li><a href="#section-01生成模型总览">生成模型总览</a></li>
+<li><a href="#section-02-vae">VAE</a></li>
+<li><a href="#section-03-vae-vs-ae">VAE vs AE (What the
+difference)</a></li>
 </ul>
 <h2 id="section-01生成模型总览">Section 01：生成模型总览</h2>
 <p>文章中说的很好了，所以这里直接复制原文。</p>
@@ -422,8 +443,10 @@ observations.</p>
 <h2 id="section-02-vae">Section 02： VAE</h2>
 <p>这一节主要分为以下几个内容：</p>
 <ul>
-<li>ELBO &amp; ELBO to VAE</li>
-<li>VAE Loss &amp; Reparameterization</li>
+<li><a href="#subsection-0201elbo--elbo-to-vae">ELBO &amp; ELBO to
+VAE</a></li>
+<li><a href="#subsection-0202vae-loss--reparameteriation">VAE Loss &amp;
+Reparameterization</a></li>
 </ul>
 <h3 id="subsection-02.01elbo-elbo-to-vae">SubSection 02.01：ELBO &amp;
 ELBO to VAE</h3>
@@ -464,8 +487,8 @@ x)}] + D_{KL}(q_{\phi}(z | x) || p(z | x))
 被分为了两个部分，<span class="math inline">\(\mathbb{E}_{q_{\phi}(z |
 x)} [\log \frac{p(x, z)}{q_{\phi}(z | x)}]\)</span> 和 <span class="math inline">\(D_{KL}(q_{\phi}(z | x) || p(z | x))\)</span>
 。</p>
-<h3 id="subsection-02.01vae-loss-reparameterization">SubSection
-02.01：VAE Loss &amp; Reparameterization</h3>
+<h3 id="subsection-02.02vae-loss-reparameterization">SubSection
+02.02：VAE Loss &amp; Reparameterization</h3>
 <p>由于要拟合的是 latent space，所以希望 <span class="math inline">\(D_{KL}(q_{\phi}(z | x) || p(z | x))\)</span>
 尽可能小，然后 <span class="math inline">\(p(x)\)</span>
 是个常量，所以变相的是增大 $ <em>{q</em>{}(z | x)} []$ 。</p>
@@ -483,8 +506,6 @@ p(z)}{q_{\phi}(z | x)}] \\
 D_{KL}(q_{\phi}(z | x) || p(z))
 \end{aligned}
 \]</span></p>
-<h3 id="subsection-02.02vae-loss-reparameteriation">SubSection
-02.02：VAE Loss &amp; Reparameteriation</h3>
 <p>这里我们看到的两个部分就对应 VAE 的两个 Loss</p>
 <ul>
 <li><span class="math inline">\(\mathbb{E}_{q_{\phi}(z | x)}(\log
@@ -506,14 +527,14 @@ z = \mu + \sigma \odot \epsilon, \ \epsilon \sim N(0, 1)
 <p>而 VAE
 不会，原因是我们用的是一个概率模型，只要在定义域内，都理论上会在 train
 的过程中被 cover 到。</p>
-<p>效果如下：</p>
 <p align="center">
 <img src="/2024/07/31/VAE/ae_new.png" width="400"> <img src="/2024/07/31/VAE/Figure_2.png" width="400">
 </p>
 <figure align="center">
 Right Image is AE latent space, Left Image is VAE latent space.
 </figure>
-<p><a target="_blank" rel="noopener" href="https://github.com/cagindex/MNIST_VAE.git">代码模型</a></p>
+<p>代码实现：<a target="_blank" rel="noopener" href="https://github.com/cagindex/MNIST_VAE.git">MNIST
+VAE</a></p>
 
       
     </div>
@@ -538,11 +559,11 @@ Right Image is AE latent space, Left Image is VAE latent space.
     <figure class="media">
       <div class="media-left">
         <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+          <img src="/images/tianyi.jpg" class="img-rounded w-full" alt="">
         </a>
       </div>
       <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">cagindex</span><small class="ml-1x">ZZZ</small></a></h3>
         <div>个人简介。</div>
       </div>
     </figure>
