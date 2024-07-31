@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>VAE | cagindex blog</title>
+  <meta name="description" content="document.addEventListener(&quot;DOMContentLoaded&quot;, function() {         renderMathInElement(document.body, {           &#x2F;&#x2F; customised options           &#x2F;&#x2F; • auto-render specific keys, e.g.:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VAE">
+<meta property="og:url" content="https://cagindex.github.io/2024/07/31/VAE/index.html">
+<meta property="og:site_name" content="cagindex blog">
+<meta property="og:description" content="document.addEventListener(&quot;DOMContentLoaded&quot;, function() {         renderMathInElement(document.body, {           &#x2F;&#x2F; customised options           &#x2F;&#x2F; • auto-render specific keys, e.g.:">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cagindex.github.io/.io//ae_new.png">
+<meta property="og:image" content="https://cagindex.github.io/.io//Figure_2.png">
+<meta property="article:published_time" content="2024-07-31T13:50:30.000Z">
+<meta property="article:modified_time" content="2024-07-31T07:18:08.000Z">
+<meta property="article:author" content="cagindex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cagindex.github.io/.io//ae_new.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://cagindex.github.io/2024/07/31/VAE/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="cagindex blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+
+    
+      
+
+    
+      
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2024/07/31/VAE/" class="title">VAE</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-07-31T13:50:30.000Z" itemprop="datePublished">2024-07-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2024/07/29/Math/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-07-29T09:33:05.000Z" itemprop="datePublished">2024-07-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2024/07/26/Reinforcement%20Learning/" class="title">Reinforcement Learning</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-07-26T12:11:39.700Z" itemprop="datePublished">2024-07-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2024/07/26/hello-world/" class="title">Hello World</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-07-26T09:50:39.510Z" itemprop="datePublished">2024-07-26</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-VAE" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      VAE
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2024/07/31/VAE/" class="article-date">
+	  <time datetime="2024-07-31T13:50:30.000Z" itemprop="datePublished">2024-07-31</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2024/07/31/VAE/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <!-- <script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+    });
+</script>
+<h1 id="vae">VAE</h1>
+<p>参考文献：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2208.11970">Understanding
+Diffusion Models: A Unified Perspective</a></p>
+<p>主要内容：</p>
+<ul>
+<li>生成模型总览</li>
+<li>VAE</li>
+<li>VAE vs AE (What the difference)</li>
+</ul>
+<h2 id="section-01生成模型总览">Section 01：生成模型总览</h2>
+<p>文章中说的很好了，所以这里直接复制原文。</p>
+<blockquote>
+<p>For many modalities, we can think of the data we observe as
+represented or generated by an associated unseen <em>latent</em>
+variable, which we can denote by random variable <strong>z</strong>. The
+best intuition for expressing this idea is through Plato’s Allegory of
+the Cave. In the allegory, a group of people are chained inside a cave
+their entire life and can only see the two-dimensional shadows projected
+onto a wall in front of them, which are generated by unseen
+three-dimensional objects passed before a fire. To such people,
+everything they observe is actually determined by higher-dimensional
+abstract concepts that they can never behold.</p>
+<p>Analogously, the objects that we encounter in the actual world may
+also be generated as a function of some higher-level representations;
+for example, such representations may encapsulate abstract properties
+such as color, size, shape, and more. Then, what we observe can be
+interpreted as a three-dimensional projection or instantiation of such
+abstract concepts, just as what the cave people observe is actually a
+two-dimensional projection of three-dimensional objects. Whereas the
+cave people can never see (or even fully comprehend) the hidden objects,
+they can still reason and draw inferences about them; in a similar way,
+we can approximate latent representations that describe the data we
+observe.</p>
+<p>Whereas Plato’s Allegory illustrates the idea behind latent variables
+as potentially unobservable representa tions that determine
+observations, a caveat of this analogy is that in generative modeling,
+we generally seek to learn lower-dimensional latent representations
+rather than higher-dimensional ones. This is because trying to learn a
+representation of higher dimension than the observation is a fruitless
+endeavor without strong priors. On the other hand, learning
+lower-dimensional latents can also be seen as a form of compression, and
+can potentially uncover semantically meaningful structure describing
+observations.</p>
+</blockquote>
+<p>关键词：<code>latent space</code>, <code>latent variable</code>,
+<code>compression</code></p>
+<h2 id="section-02-vae">Section 02： VAE</h2>
+<p>这一节主要分为以下几个内容：</p>
+<ul>
+<li>ELBO &amp; ELBO to VAE</li>
+<li>VAE Loss &amp; Reparameterization</li>
+</ul>
+<h3 id="subsection-02.01elbo-elbo-to-vae">SubSection 02.01：ELBO &amp;
+ELBO to VAE</h3>
+<p>这里 <span class="math inline">\(p(x)\)</span>
+指的是样本的真实分布，<span class="math inline">\(p(z)\)</span> 是
+latent variable 的分布。而有下表的（比如 <span class="math inline">\(\phi\)</span>)
+是有模型训练的概论，下标对应的是模型的参数。</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E8%AF%81%E6%8D%AE%E4%B8%8B%E7%95%8C">ELBO</a>
+(<strong>E</strong>vidence <strong>L</strong>ower
+<strong>Bo</strong>und)，起源是估计一些观测数据对数似然的下届。顾名思义，就很好理解了，具体的推导：
+<span class="math display">\[
+\begin{aligned}
+\log p(x) &amp;= \log \int p(x, z) dz \\
+&amp;= \log \int \frac{p(x, z) q_{\phi}(z | x)}{q_{\phi}(z | x)} dz \\
+&amp;= \log \mathbb{E}_{q_{\phi}(z | x)}[\frac{p(x, z)}{q_{\phi}(z |
+x)}] dz \\
+&amp;\ge \mathbb{E}_{q_{\phi}(z | x)}[\log \frac{p(x, z)}{q_{\phi}(z |
+x)}] dz  \ \text{（琴生不等式）}\\
+\end{aligned}
+\]</span> 那这个和 VAE
+有什么关系呢？这里我们要做的是<strong>经过一些推导得到不等式的舍去的另一部分</strong>。
+<span class="math display">\[
+\begin{aligned}
+\log p(x) &amp;= \log p(x) \int q_{\phi}(z | x) dz \\
+&amp;= \int q_{\phi}(z | x) \log p(x) dz \ \text{（积分部分和 $x$
+无关）} \\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log p(x)] \\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)}{p(z | x)}] \\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)q_{\phi}(z |
+x)}{p(z | x)q_{\phi}(z | x)}] \\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)}{q_{\phi}(z |
+x)}] + \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{q_{\phi}(z | x)}{p(z |
+x)}]\\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)}{q_{\phi}(z |
+x)}] + D_{KL}(q_{\phi}(z | x) || p(z | x))
+\end{aligned}
+\]</span> 可以看到 <span class="math inline">\(\log p(x)\)</span>
+被分为了两个部分，<span class="math inline">\(\mathbb{E}_{q_{\phi}(z |
+x)} [\log \frac{p(x, z)}{q_{\phi}(z | x)}]\)</span> 和 <span class="math inline">\(D_{KL}(q_{\phi}(z | x) || p(z | x))\)</span>
+。</p>
+<h3 id="subsection-02.01vae-loss-reparameterization">SubSection
+02.01：VAE Loss &amp; Reparameterization</h3>
+<p>由于要拟合的是 latent space，所以希望 <span class="math inline">\(D_{KL}(q_{\phi}(z | x) || p(z | x))\)</span>
+尽可能小，然后 <span class="math inline">\(p(x)\)</span>
+是个常量，所以变相的是增大 $ <em>{q</em>{}(z | x)} []$ 。</p>
+<p>理论上来说优化方程应该是 <span class="math display">\[
+\arg \max \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)}{q_{\phi}(z |
+x)}]
+\]</span> 但是 <span class="math inline">\(p(x, z)\)</span>
+不能提前知道，所以想着用另一个模型来拟合（即：<span class="math inline">\(p(x, z) = p_{\theta}(x | z)p(z)\)</span>）</p>
+<p>所以 ELBO 就变为： <span class="math display">\[
+\begin{aligned}
+\mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p(x, z)}{q_{\phi}(z | x)}]
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log \frac{p_{\theta}(x | z)
+p(z)}{q_{\phi}(z | x)}] \\
+&amp;= \mathbb{E}_{q_{\phi}(z | x)} [\log p_{\theta}(x | z)] -
+D_{KL}(q_{\phi}(z | x) || p(z))
+\end{aligned}
+\]</span></p>
+<h3 id="subsection-02.02vae-loss-reparameteriation">SubSection
+02.02：VAE Loss &amp; Reparameteriation</h3>
+<p>这里我们看到的两个部分就对应 VAE 的两个 Loss</p>
+<ul>
+<li><span class="math inline">\(\mathbb{E}_{q_{\phi}(z | x)}(\log
+p_{\theta}(x | z))\)</span> 表示由 latent space 生成的模型和原本的 <span class="math inline">\(x\)</span> 的相似程度，这部分对应 Decoder 。</li>
+<li><span class="math inline">\(D_{KL}(q_{\phi}(z | x) || p(z))\)</span>
+表示 latent space 的分布和真实的分布的相似程度，这部分对应
+Encoder。</li>
+</ul>
+<p>一般而言，我们认为 <span class="math inline">\(p(z) \sim N(0,
+I)\)</span> ,也就是假定 latent space
+的分布空间（当然，也可以认为是其他的分布）。</p>
+<p>通常而言，Encoder 一般选择生成多元高斯的模型，一般得到的是 <span class="math inline">\(\mu, \sigma\)</span> 。</p>
+<p>但是这里有个问题，就是为了采样得到 <span class="math inline">\(z\)</span>，我们用的是随机采样，这样会导致无法梯度回传递，所以这里用了重参数化的方法（Reparameterization）:
+<span class="math display">\[
+z = \mu + \sigma \odot \epsilon, \ \epsilon \sim N(0, 1)
+\]</span> 这样就巧妙地解决了梯度回传的问题。</p>
+<h2 id="section-03-vae-vs-ae">Section 03: VAE vs AE</h2>
+<p>AE 当 latent variable 取的比较怪的时候，会生成比较怪的结果。</p>
+<p>而 VAE
+不会，原因是我们用的是一个概率模型，只要在定义域内，都理论上会在 train
+的过程中被 cover 到。</p>
+<p>效果如下：</p>
+<div data-align="center">
+<p><img src="/.io//ae_new.png" title="Multiple images using p with center alignment" width="400">
+<img src="/.io//Figure_2.png" title="Multiple images using p with center alignment" width="400"></p>
+</div>
+<div data-align="center">
+<p>Right Image is AE latent space, Left Image is VAE latent space.</p>
+</div>
+<p><a target="_blank" rel="noopener" href="https://github.com/cagindex/MNIST_VAE.git">代码模型</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://cagindex.github.io/2024/07/31/VAE/" title="VAE" target="_blank" rel="external">https://cagindex.github.io/2024/07/31/VAE/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2024/07/29/Math/" title="(no title)"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
