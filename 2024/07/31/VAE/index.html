@@ -25,13 +25,13 @@
 <meta property="og:site_name" content="cagindex blog">
 <meta property="og:description" content="document.addEventListener(&quot;DOMContentLoaded&quot;, function() {         renderMathInElement(document.body, {           &#x2F;&#x2F; customised options           &#x2F;&#x2F; • auto-render specific keys, e.g.:">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cagindex.github.io/.io//ae_new.png">
-<meta property="og:image" content="https://cagindex.github.io/.io//Figure_2.png">
+<meta property="og:image" content="https://cagindex.github.io/2024/07/31/VAE/ae_new.png">
+<meta property="og:image" content="https://cagindex.github.io/2024/07/31/VAE/Figure_2.png">
 <meta property="article:published_time" content="2024-07-31T13:50:30.000Z">
-<meta property="article:modified_time" content="2024-07-31T07:18:08.000Z">
+<meta property="article:modified_time" content="2024-07-31T07:46:32.000Z">
 <meta property="article:author" content="cagindex">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cagindex.github.io/.io//ae_new.png">
+<meta name="twitter:image" content="https://cagindex.github.io/2024/07/31/VAE/ae_new.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://cagindex.github.io/2024/07/31/VAE/index.html">
   
@@ -507,13 +507,12 @@ z = \mu + \sigma \odot \epsilon, \ \epsilon \sim N(0, 1)
 不会，原因是我们用的是一个概率模型，只要在定义域内，都理论上会在 train
 的过程中被 cover 到。</p>
 <p>效果如下：</p>
-<div data-align="center">
-<p><img src="/.io//ae_new.png" title="Multiple images using p with center alignment" width="400">
-<img src="/.io//Figure_2.png" title="Multiple images using p with center alignment" width="400"></p>
-</div>
-<div data-align="center">
-<p>Right Image is AE latent space, Left Image is VAE latent space.</p>
-</div>
+<p align="center">
+<img src="/2024/07/31/VAE/ae_new.png" width="400"> <img src="/2024/07/31/VAE/Figure_2.png" width="400">
+</p>
+<figure align="center">
+Right Image is AE latent space, Left Image is VAE latent space.
+</figure>
 <p><a target="_blank" rel="noopener" href="https://github.com/cagindex/MNIST_VAE.git">代码模型</a></p>
 
       
